@@ -32,10 +32,10 @@ interface IStakingRewards {
     function exitStaking() external;
 
     /// @dev Withdraw tokens that have been added to staking
-    function withdraw(uint256 _amount) external;
+    function withdraw(address _to, uint256 _amount) external;
 
     /// @dev Receiving rewards after the deposited tokens have been stacked
-    function getRewards() external;
+    function getRewards(address _to) external;
 }
 
 /**
@@ -70,18 +70,12 @@ contract StakingRewards is Ownable, IStakingRewards {
     }
 
     /// @dev Throws if amount sent less or equal to zero
-    modifier updateReward() {
+    modifier updateReward(address _staker) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
 
-        if (msg.sender != address(0)) {
-            users[msg.sender].rewards = earned();
-            users[msg.sender].rewardPerTokenPaid = rewardPerTokenStored;
-        }
-
-        // if(users[msg.sender].token == address(selfFarmToken)) {
-
-        // }
+        users[_staker].rewards = earned(_staker);
+        users[_staker].rewardPerTokenPaid = rewardPerTokenStored;
 
         _;
     }
@@ -101,16 +95,10 @@ contract StakingRewards is Ownable, IStakingRewards {
         farmingTokenTwo = ERC20(_farmingTokenTwo);
     }
 
-    function exitStaking() external updateReward {
-        withdraw(users[msg.sender].balance);
-        getRewards();
-    }
-
-    /// @dev Start the staking
     function stake(address _tokenAddr, uint256 _amount)
-        external
+        public
         amountGTZero(_amount)
-        updateReward
+        updateReward(msg.sender)
     {
         require(_tokenAddr != address(0), "zero address");
 
@@ -128,25 +116,42 @@ contract StakingRewards is Ownable, IStakingRewards {
         emit Deposit(msg.sender, users[msg.sender].token, _amount);
     }
 
-    function withdraw(uint256 _amount)
+    function withdraw(address _to, uint256 _amount)
         public
         amountGTZero(_amount)
-        updateReward
+        updateReward(_to)
     {
-        users[msg.sender].balance -= _amount;
+        users[_to].balance -= _amount;
         totalSupply -= _amount;
 
-        ERC20(users[msg.sender].token).transfer(msg.sender, _amount);
+        ERC20(users[_to].token).transfer(_to, _amount);
 
-        emit Withdraw(msg.sender, users[msg.sender].token, _amount);
+        emit Withdraw(_to, users[_to].token, _amount);
     }
 
-    function getRewards() public updateReward {
-        uint256 reward = users[msg.sender].rewards;
+    function getRewards(address _to)
+        public
+        amountGTZero(users[_to].rewards)
+        updateReward(_to)
+    {
+        uint256 reward = users[_to].rewards;
 
-        users[msg.sender].rewards = 0;
+        users[_to].rewards = 0;
 
-        selfFarmToken.transfer(msg.sender, reward);
+        selfFarmToken.transfer(_to, reward);
+    }
+
+    function exitStaking() external updateReward(msg.sender) {
+        withdraw(msg.sender, users[msg.sender].balance);
+        getRewards(msg.sender);
+    }
+
+    /// @dev Calculate the number of tokens earned by the sender
+    function earned(address _sender) public view returns (uint256) {
+        return
+            ((users[_sender].balance *
+                (rewardPerToken() - users[_sender].rewardPerTokenPaid)) /
+                1e18) + users[_sender].rewards;
     }
 
     /// @dev Calculate the reward to users per token
@@ -154,7 +159,6 @@ contract StakingRewards is Ownable, IStakingRewards {
         if (totalSupply == 0) {
             return rewardPerTokenStored;
         }
-
         return
             rewardPerTokenStored +
             (rewardRate *
@@ -169,14 +173,6 @@ contract StakingRewards is Ownable, IStakingRewards {
             lastUpdateTime <= block.timestamp
                 ? lastUpdateTime
                 : block.timestamp;
-    }
-
-    /// @dev Calculate the number of tokens earned by the sender
-    function earned() public view returns (uint256) {
-        return
-            ((users[msg.sender].balance *
-                (rewardPerToken() - users[msg.sender].rewardPerTokenPaid)) /
-                1e18) + users[msg.sender].rewards;
     }
 }
 
