@@ -25,21 +25,42 @@ interface IStakingRewards {
     /// @dev Emitted when the user withdraws some amount of rewards from Staking
     event RewardSent(address indexed to, uint256 amount);
 
-    /// @dev Enters the staking
-    function stake(
-        address _from,
-        address _tokenAddr,
-        uint256 _amount
-    ) external;
+    /**
+     * @dev Entering staking with the selected token {_tokenAddr} that the user wants to stake
+     * and the amount {_amount} of tokens he wants to deposit
+     *
+     * REQUIREMENTS:
+     * - _amount must be grater then zero
+     * - _tokenAddr must be different from address 0
+     */
+    function stake(address _tokenAddr, uint256 _amount) external;
 
-    /// @dev Exits the staking
+    /**
+     * @dev Withdrawing staking token {_tokenAddr} that the user staked
+     * and the amount {_amount} of tokens he wants to withdraw
+     *
+     * REQUIREMENTS:
+     * - _amount must be grater then zero
+     */
+    function withdraw(uint256 _amount) external;
+
+    /**
+     * @dev Receiving the rewards {reward} that the user received for some time spent in staking
+     *
+     * REQUIREMENTS:
+     * - reward must be grater then zero
+     */
+    function getRewards() external;
+
+    /**
+     * @dev Exiting staking with withdrawing staking token {_tokenAddr} that the user staked
+     * and receiving the rewards {reward} that the user received for some time spent in staking
+     *
+     * REQUIREMENTS:
+     * - _amount must be grater then zero
+     * - reward must be grater then zero
+     */
     function exitStaking() external;
-
-    /// @dev Withdraw tokens that have been added to staking
-    function withdraw(address _to, uint256 _amount) external;
-
-    /// @dev Receiving rewards after the deposited tokens have been stacked
-    function getRewards(address _to) external;
 }
 
 /**
@@ -62,12 +83,8 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     mapping(address => User) public users;
 
-    uint256 public rewardsDuration; // Duration of rewards to be paid out (in seconds)
-    uint256 public rewardRate = 1000; // how many rewards given to user / second
-
-    uint256 public finishAt; // timestamp of when the rewards finish
     uint256 public lastUpdateTime; // when was the contract last updated
-
+    uint256 public rewardRate = 1000; // how many rewards given to user / second
     uint256 public rewardPerTokenStored; // sum of (rewardRate * duration * 1e18 / total supply)
 
     uint256 public totalSupply; // total stacked tokens
@@ -78,17 +95,18 @@ contract StakingRewards is Ownable, IStakingRewards {
         _;
     }
 
-    /// @dev
+    /**
+     * @dev Updates the {rewardPerTokenStored} and {lastUpdateTime}
+     * Then updates user's rewards {user.rewards}
+     */
     modifier updateReward(address _staker) {
         rewardPerTokenStored = rewardPerToken();
-        lastUpdateTime = lastTimeRewardApplicable();
+        lastUpdateTime = block.timestamp;
 
         User storage user = users[_staker];
 
-        if (_staker != address(0)) {
-            user.rewards = earned(_staker);
-            user.rewardPerTokenPaid = rewardPerTokenStored;
-        }
+        user.rewards = earned(_staker);
+        user.rewardPerTokenPaid = rewardPerTokenStored;
 
         _;
     }
@@ -100,98 +118,67 @@ contract StakingRewards is Ownable, IStakingRewards {
     constructor(
         address _selfFarmToken,
         address _tokenOne,
-        address _tokenTwo,
-        uint256 duration
+        address _tokenTwo
     ) Ownable() {
         selfFarmToken = ERC20Update(_selfFarmToken);
         tokenOne = ERC20Update(_tokenOne);
         tokenTwo = ERC20Update(_tokenTwo);
-
-        rewardsDuration = duration;
     }
 
-    function notifyRewardAmount(uint256 _amount)
-        external
-        onlyOwner
-        updateReward(address(0))
+    function stake(address _tokenAddr, uint256 _amount)
+        public
+        amountGTZero(_amount)
+        updateReward(msg.sender)
     {
-        if (block.timestamp >= finishAt) {
-            rewardRate = _amount / rewardsDuration;
-        } else {
-            uint256 remainingRewards = (finishAt - block.timestamp) *
-                rewardRate;
-            rewardRate = (_amount + remainingRewards) / rewardsDuration;
-        }
-
-        require(rewardRate > 0, "reward rate = 0");
-        require(
-            rewardRate * rewardsDuration <=
-                selfFarmToken.balanceOf(address(this)),
-            "reward amount > balance"
-        );
-
-        finishAt = block.timestamp + rewardsDuration;
-        lastUpdateTime = block.timestamp;
-    }
-
-    function stake(
-        address _from,
-        address _tokenAddr,
-        uint256 _amount
-    ) public amountGTZero(_amount) updateReward(_from) {
         require(_tokenAddr != address(0), "zero address");
 
-        User storage user = users[_from];
+        User storage user = users[msg.sender];
 
         user.token = _tokenAddr;
 
         user.balance += _amount;
         totalSupply += _amount;
 
-        ERC20(user.token).transferFrom(_from, address(this), _amount);
+        ERC20(user.token).transferFrom(msg.sender, address(this), _amount);
 
-        selfFarmToken.mint(_from, _amount);
-
-        emit Deposit(_from, user.token, _amount);
+        emit Deposit(msg.sender, user.token, _amount);
     }
 
-    function withdraw(address _to, uint256 _amount)
+    function withdraw(uint256 _amount)
         public
         amountGTZero(_amount)
-        updateReward(_to)
+        updateReward(msg.sender)
     {
-        User storage user = users[_to];
+        User storage user = users[msg.sender];
 
         user.balance -= _amount;
         totalSupply -= _amount;
 
-        ERC20(user.token).transfer(_to, _amount);
+        ERC20(user.token).transfer(msg.sender, _amount);
 
-        emit Withdraw(_to, user.token, _amount);
+        emit Withdraw(msg.sender, user.token, _amount);
     }
 
-    function getRewards(address _to)
+    function getRewards()
         public
-        amountGTZero(users[_to].rewards)
-        updateReward(_to)
+        amountGTZero(users[msg.sender].rewards)
+        updateReward(msg.sender)
     {
-        uint256 reward = users[_to].rewards;
+        uint256 reward = users[msg.sender].rewards;
 
-        users[_to].rewards = 0;
+        users[msg.sender].rewards = 0;
 
-        selfFarmToken.transfer(_to, reward);
+        selfFarmToken.transfer(msg.sender, reward);
     }
 
     function exitStaking() external updateReward(msg.sender) {
-        selfFarmToken.burn(msg.sender, users[msg.sender].balance);
-
-        withdraw(msg.sender, users[msg.sender].balance);
-        getRewards(msg.sender);
+        withdraw(users[msg.sender].balance);
+        getRewards();
     }
 
     /// @dev Calculate the number of tokens earned by the sender
     function earned(address _sender) public view returns (uint256) {
-        User storage user = users[_sender];
+        User memory user = users[_sender];
         return
             ((user.balance * (rewardPerToken() - user.rewardPerTokenPaid)) /
                 1e18) + user.rewards;
@@ -204,15 +191,8 @@ contract StakingRewards is Ownable, IStakingRewards {
         }
         return
             rewardPerTokenStored +
-            (rewardRate *
-                (lastTimeRewardApplicable() - lastUpdateTime) *
-                1e18) /
+            (rewardRate * (block.timestamp - lastUpdateTime) * 1e18) /
             totalSupply;
-    }
-
-    /// @dev Calculate the min of lastUpdateTime and timestamp
-    function lastTimeRewardApplicable() private view returns (uint256) {
-        return lastUpdateTime <= block.timestamp ? finishAt : block.timestamp;
     }
 }
 
