@@ -212,10 +212,7 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     /// @dev Calculate the min of lastUpdateTime and timestamp
     function lastTimeRewardApplicable() private view returns (uint256) {
-        return
-            lastUpdateTime <= block.timestamp
-                ? lastUpdateTime
-                : block.timestamp;
+        return lastUpdateTime <= block.timestamp ? finishAt : block.timestamp;
     }
 }
 
