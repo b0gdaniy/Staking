@@ -62,8 +62,12 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     mapping(address => User) public users;
 
+    uint256 public rewardsDuration; // Duration of rewards to be paid out (in seconds)
     uint256 public rewardRate = 1000; // how many rewards given to user / second
+
+    uint256 public finishAt; // timestamp of when the rewards finish
     uint256 public lastUpdateTime; // when was the contract last updated
+
     uint256 public rewardPerTokenStored; // sum of (rewardRate * duration * 1e18 / total supply)
 
     uint256 public totalSupply; // total stacked tokens
@@ -74,15 +78,17 @@ contract StakingRewards is Ownable, IStakingRewards {
         _;
     }
 
-    /// @dev Throws if amount sent less or equal to zero
+    /// @dev
     modifier updateReward(address _staker) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
 
         User storage user = users[_staker];
 
-        user.rewards = earned(_staker);
-        user.rewardPerTokenPaid = rewardPerTokenStored;
+        if (_staker != address(0)) {
+            user.rewards = earned(_staker);
+            user.rewardPerTokenPaid = rewardPerTokenStored;
+        }
 
         _;
     }
@@ -94,12 +100,38 @@ contract StakingRewards is Ownable, IStakingRewards {
     constructor(
         address _selfFarmToken,
         address _tokenOne,
-        address _tokenTwo
-    ) {
-        //Ownable() {
+        address _tokenTwo,
+        uint256 duration
+    ) Ownable() {
         selfFarmToken = ERC20Update(_selfFarmToken);
         tokenOne = ERC20Update(_tokenOne);
         tokenTwo = ERC20Update(_tokenTwo);
+
+        rewardsDuration = duration;
+    }
+
+    function notifyRewardAmount(uint256 _amount)
+        external
+        onlyOwner
+        updateReward(address(0))
+    {
+        if (block.timestamp >= finishAt) {
+            rewardRate = _amount / rewardsDuration;
+        } else {
+            uint256 remainingRewards = (finishAt - block.timestamp) *
+                rewardRate;
+            rewardRate = (_amount + remainingRewards) / rewardsDuration;
+        }
+
+        require(rewardRate > 0, "reward rate = 0");
+        require(
+            rewardRate * rewardsDuration <=
+                selfFarmToken.balanceOf(address(this)),
+            "reward amount > balance"
+        );
+
+        finishAt = block.timestamp + rewardsDuration;
+        lastUpdateTime = block.timestamp;
     }
 
     function stake(
