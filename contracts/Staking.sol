@@ -26,7 +26,11 @@ interface IStakingRewards {
     event RewardSent(address indexed to, uint256 amount);
 
     /// @dev Enters the staking
-    function stake(address _tokenAddr, uint256 _amount) external;
+    function stake(
+        address _from,
+        address _tokenAddr,
+        uint256 _amount
+    ) external;
 
     /// @dev Exits the staking
     function exitStaking() external;
@@ -42,11 +46,12 @@ interface IStakingRewards {
  * @title Staking rewards contract
  * @author Bohdan Pukhno
  * @dev StakingRewards contract that have built on staking rewards algorithm
+ * We have 3 tokens: one of them is a token that farms itself, 2 other tokens farm a token that farms itself
  */
 contract StakingRewards is Ownable, IStakingRewards {
-    ERC20 public selfFarmToken; // token that farms itself
-    ERC20 public farmingTokenOne; // token that farms selfFarmToken
-    ERC20 public farmingTokenTwo; // token that farms selfFarmToken
+    ERC20Update public tokenOne; // token that farms {selfFarmToken}
+    ERC20Update public tokenTwo; // token that farms {selfFarmToken}
+    ERC20Update public selfFarmToken; // token that farms itself
 
     struct User {
         uint256 balance; // balance of user
@@ -74,8 +79,10 @@ contract StakingRewards is Ownable, IStakingRewards {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = lastTimeRewardApplicable();
 
-        users[_staker].rewards = earned(_staker);
-        users[_staker].rewardPerTokenPaid = rewardPerTokenStored;
+        User storage user = users[_staker];
+
+        user.rewards = earned(_staker);
+        user.rewardPerTokenPaid = rewardPerTokenStored;
 
         _;
     }
@@ -86,34 +93,34 @@ contract StakingRewards is Ownable, IStakingRewards {
      */
     constructor(
         address _selfFarmToken,
-        address _farmingTokenOne,
-        address _farmingTokenTwo
+        address _tokenOne,
+        address _tokenTwo
     ) {
         //Ownable() {
-        selfFarmToken = ERC20(_selfFarmToken);
-        farmingTokenOne = ERC20(_farmingTokenOne);
-        farmingTokenTwo = ERC20(_farmingTokenTwo);
+        selfFarmToken = ERC20Update(_selfFarmToken);
+        tokenOne = ERC20Update(_tokenOne);
+        tokenTwo = ERC20Update(_tokenTwo);
     }
 
-    function stake(address _tokenAddr, uint256 _amount)
-        public
-        amountGTZero(_amount)
-        updateReward(msg.sender)
-    {
+    function stake(
+        address _from,
+        address _tokenAddr,
+        uint256 _amount
+    ) public amountGTZero(_amount) updateReward(_from) {
         require(_tokenAddr != address(0), "zero address");
 
-        users[msg.sender].token = _tokenAddr;
+        User storage user = users[_from];
 
-        users[msg.sender].balance += _amount;
+        user.token = _tokenAddr;
+
+        user.balance += _amount;
         totalSupply += _amount;
 
-        ERC20(users[msg.sender].token).transferFrom(
-            msg.sender,
-            address(this),
-            _amount
-        );
+        ERC20(user.token).transferFrom(_from, address(this), _amount);
 
-        emit Deposit(msg.sender, users[msg.sender].token, _amount);
+        selfFarmToken.mint(_from, _amount);
+
+        emit Deposit(_from, user.token, _amount);
     }
 
     function withdraw(address _to, uint256 _amount)
@@ -121,12 +128,14 @@ contract StakingRewards is Ownable, IStakingRewards {
         amountGTZero(_amount)
         updateReward(_to)
     {
-        users[_to].balance -= _amount;
+        User storage user = users[_to];
+
+        user.balance -= _amount;
         totalSupply -= _amount;
 
-        ERC20(users[_to].token).transfer(_to, _amount);
+        ERC20(user.token).transfer(_to, _amount);
 
-        emit Withdraw(_to, users[_to].token, _amount);
+        emit Withdraw(_to, user.token, _amount);
     }
 
     function getRewards(address _to)
@@ -142,16 +151,18 @@ contract StakingRewards is Ownable, IStakingRewards {
     }
 
     function exitStaking() external updateReward(msg.sender) {
+        selfFarmToken.burn(msg.sender, users[msg.sender].balance);
+
         withdraw(msg.sender, users[msg.sender].balance);
         getRewards(msg.sender);
     }
 
     /// @dev Calculate the number of tokens earned by the sender
     function earned(address _sender) public view returns (uint256) {
+        User storage user = users[_sender];
         return
-            ((users[_sender].balance *
-                (rewardPerToken() - users[_sender].rewardPerTokenPaid)) /
-                1e18) + users[_sender].rewards;
+            ((user.balance * (rewardPerToken() - user.rewardPerTokenPaid)) /
+                1e18) + user.rewards;
     }
 
     /// @dev Calculate the reward to users per token
