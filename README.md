@@ -2,7 +2,7 @@
 
 
 
-## Sample Hardhat Project
+## How to use Hardhat in this Project
 
 Try running some of the following tasks:
 
