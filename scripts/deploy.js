@@ -8,7 +8,7 @@ const hre = require("hardhat");
 const ethers = hre.ethers;
 
 async function main() {
-  // take owner of Staking contract and 3 accounts
+  // takes owner of Staking contract
   const [owner] = await ethers.getSigners()
 
   // deploy {selfFarmToken}
