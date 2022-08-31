@@ -44,3 +44,5 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+// module.exports = { erc20SelfFarm, erc20One, erc20Two, staking }
