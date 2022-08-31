@@ -9,7 +9,7 @@ const ethers = hre.ethers;
 
 async function main() {
   // take owner of Staking contract and 3 accounts
-  const [owner, staker1, staker2, staker3] = await ethers.getSigners()
+  const [owner] = await ethers.getSigners()
 
   // deploy {selfFarmToken}
   const erc20SelfFarm = await deployErc20(owner, "SelfFarmToken", "SFT")
