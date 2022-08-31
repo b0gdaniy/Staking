@@ -5,22 +5,37 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+const ethers = hre.ethers;
 
 async function main() {
-  // const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  // const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  // take owner of Staking contract and 3 accounts
+  const [owner, staker1, staker2, staker3] = await ethers.getSigners()
 
-  // const lockedAmount = hre.ethers.utils.parseEther("1");
+  // deploy {selfFarmToken}
+  const erc20SelfFarm = await deployErc20(owner, "SelfFarmToken", "SFT")
 
-  // const Lock = await hre.ethers.getContractFactory("Lock");
-  // const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  // deploy {tokenOne}
+  const erc20One = await deployErc20(owner, "TokenOne", "ONE")
 
-  // await lock.deployed();
+  // deploy {tokenTwo}
+  const erc20Two = await deployErc20(owner, "TokenTwo", "TWO")
 
-  // console.log(
-  //   `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  // );
+  // deploy {StakingRewards}
+  const Staking = await ethers.getContractFactory("StakingRewards", owner)
+  const staking = await Staking.deploy(erc20SelfFarm.address, erc20One.address, erc20Two.address)
+  await staking.deployed()
+
+  console.log("Staking Rewards: ", staking.address)
+}
+
+async function deployErc20(deployer, tokenName, tokenSign) {
+  const Erc20 = await ethers.getContractFactory("ERC20Updated", deployer)
+  const erc20 = await Erc20.deploy(tokenName, tokenSign)
+  await erc20.deployed()
+
+  console.log("ERC20 ", tokenName, ": ", erc20.address)
+
+  return erc20
 }
 
 // We recommend this pattern to be able to use async/await everywhere

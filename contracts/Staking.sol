@@ -30,8 +30,8 @@ interface IStakingRewards {
      * and the amount {_amount} of tokens he wants to deposit
      *
      * REQUIREMENTS:
-     * - _amount must be grater then zero
-     * - _tokenAddr must be different from address 0
+     * - {_amount} must be grater then zero
+     * - {_tokenAddr} must be different from address 0
      */
     function stake(address _tokenAddr, uint256 _amount) external;
 
@@ -40,7 +40,7 @@ interface IStakingRewards {
      * and the amount {_amount} of tokens he wants to withdraw
      *
      * REQUIREMENTS:
-     * - _amount must be grater then zero
+     * - {_amount} must be grater then zero
      */
     function withdraw(uint256 _amount) external;
 
@@ -48,7 +48,7 @@ interface IStakingRewards {
      * @dev Receiving the rewards {reward} that the user received for some time spent in staking
      *
      * REQUIREMENTS:
-     * - reward must be grater then zero
+     * - {reward} must be grater then zero
      */
     function getRewards() external;
 
@@ -57,8 +57,8 @@ interface IStakingRewards {
      * and receiving the rewards {reward} that the user received for some time spent in staking
      *
      * REQUIREMENTS:
-     * - _amount must be grater then zero
-     * - reward must be grater then zero
+     * - {_amount} must be grater then zero
+     * - {reward} must be grater then zero
      */
     function exitStaking() external;
 }
@@ -70,9 +70,9 @@ interface IStakingRewards {
  * We have 3 tokens: one of them is a token that farms itself, 2 other tokens farm a token that farms itself
  */
 contract StakingRewards is Ownable, IStakingRewards {
-    ERC20Update public tokenOne; // token that farms {selfFarmToken}
-    ERC20Update public tokenTwo; // token that farms {selfFarmToken}
-    ERC20Update public selfFarmToken; // token that farms itself
+    ERC20Updated public tokenOne; // token that farms {selfFarmToken}
+    ERC20Updated public tokenTwo; // token that farms {selfFarmToken}
+    ERC20Updated public selfFarmToken; // token that farms itself
 
     struct User {
         uint256 balance; // balance of user
@@ -120,9 +120,9 @@ contract StakingRewards is Ownable, IStakingRewards {
         address _tokenOne,
         address _tokenTwo
     ) Ownable() {
-        selfFarmToken = ERC20Update(_selfFarmToken);
-        tokenOne = ERC20Update(_tokenOne);
-        tokenTwo = ERC20Update(_tokenTwo);
+        selfFarmToken = ERC20Updated(_selfFarmToken);
+        tokenOne = ERC20Updated(_tokenOne);
+        tokenTwo = ERC20Updated(_tokenTwo);
     }
 
     function stake(address _tokenAddr, uint256 _amount)
@@ -139,7 +139,11 @@ contract StakingRewards is Ownable, IStakingRewards {
         user.balance += _amount;
         totalSupply += _amount;
 
-        ERC20(user.token).transferFrom(msg.sender, address(this), _amount);
+        ERC20Updated(user.token).transferFrom(
+            msg.sender,
+            address(this),
+            _amount
+        );
 
         emit Deposit(msg.sender, user.token, _amount);
     }
@@ -154,7 +158,7 @@ contract StakingRewards is Ownable, IStakingRewards {
         user.balance -= _amount;
         totalSupply -= _amount;
 
-        ERC20(user.token).transfer(msg.sender, _amount);
+        ERC20Updated(user.token).transfer(msg.sender, _amount);
 
         emit Withdraw(msg.sender, user.token, _amount);
     }

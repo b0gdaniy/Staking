@@ -4,11 +4,11 @@ pragma solidity ^0.8.16;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 /**
- * @dev Update of {ERC20} from
+ * @dev Update for {ERC20} from
  * https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol
  * Added 2 public functions {mint} and {burn} that called 2 internal functions {_mint} and {_burn}
  */
-contract ERC20Update is ERC20 {
+contract ERC20Updated is ERC20 {
     constructor(string memory _name, string memory _symbol)
         ERC20(_name, _symbol)
     {}
