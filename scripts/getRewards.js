@@ -49,8 +49,6 @@ async function main() {
 	// rewards for 3 stakers
 	const staker1getRewards = await sRContract.connect(staker1).getRewards({ gasLimit: 3e7 })
 	const staker1receipt = await staker1getRewards.wait()
-	// // const staker1event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker1receipt.blockHash)
-	// // console.log("Staker1 Stake Event: ", staker1event)
 
 	// check balance for {staker1}
 	const staker1SFTBalance = await selfFarmContract.balanceOf(staker1.address)
@@ -60,8 +58,7 @@ async function main() {
 
 	const staker2getRewards = await sRContract.connect(staker2).getRewards({ gasLimit: 3e7 })
 	const staker2receipt = await staker2getRewards.wait()
-	// // const staker2event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker2receipt.blockHash)
-	// // console.log("Staker2 Stake Event: ", staker2event)
+
 	// check balance for {staker2}
 	const staker2SFTBalance = await selfFarmContract.balanceOf(staker2.address)
 	console.log(staker2.address, " Address SFT token balance: ", staker2SFTBalance, " tokens")
@@ -70,8 +67,7 @@ async function main() {
 
 	const staker3getRewards = await sRContract.connect(staker3).getRewards({ gasLimit: 3e7 })
 	const staker3receipt = await staker3getRewards.wait()
-	// // const staker3event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker3receipt.blockHash)
-	// // console.log("Staker3 Stake Event: ", staker3event)
+
 	// check balance for {staker3}
 	const staker3SFTBalance = await selfFarmContract.balanceOf(staker3.address)
 	console.log(staker3.address, " Address SFT token balance: ", staker3SFTBalance, " tokens")

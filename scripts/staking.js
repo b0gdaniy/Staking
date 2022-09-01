@@ -51,28 +51,28 @@ async function main() {
 	// stake for 3 stakers
 	const staker1Stake = await sRContract.connect(staker1).stake("0x5FbDB2315678afecb367f032d93F642f64180aa3", oneTokenVal.mul(1000), { gasLimit: 3e7 })
 	const staker1receipt = await staker1Stake.wait()
-	// const staker1event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker1receipt.blockHash)
-	// console.log("Staker1 Stake Event: ", staker1event)
+	// // const staker1event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker1receipt.blockHash)
+	// // console.log("Staker1 Stake Event: ", staker1event)
 
 	const staker2Stake = await sRContract.connect(staker2).stake("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", oneTokenVal.mul(1000), { gasLimit: 3e7 })
 	const staker2receipt = await staker2Stake.wait()
-	// const staker2event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker2receipt.blockHash)
-	// console.log("Staker2 Stake Event: ", staker2event)
+	// // const staker2event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker2receipt.blockHash)
+	// // console.log("Staker2 Stake Event: ", staker2event)
 
 	const staker3Stake = await sRContract.connect(staker3).stake("0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", oneTokenVal.mul(1000), { gasLimit: 3e7 })
-	// const staker3receipt = await staker3Stake.wait()
-	// const staker3event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker3receipt.blockHash)
-	// console.log("Staker3 Stake Event: ", staker3event)
+	const staker3receipt = await staker3Stake.wait()
+	// // const staker3event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker3receipt.blockHash)
+	// // console.log("Staker3 Stake Event: ", staker3event)
 
 	// check balance of staking contract
 	const sRContractSFTBalance = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract SFT token balance: ", sRContractSFTBalance.div(oneTokenVal), " tokens")
+	console.log("StakingRewards Contract SFT token balance: ", sRContractSFTBalance.div(oneTokenVal), " * 1e18 tokens")
 
 	const sRContractONEBalance = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract ONE token balance: ", sRContractONEBalance.div(oneTokenVal), " tokens")
+	console.log("StakingRewards Contract ONE token balance: ", sRContractONEBalance.div(oneTokenVal), " * 1e18 tokens")
 
 	const sRContractTWOBalance = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract TWO token balance: ", sRContractTWOBalance.div(oneTokenVal), " tokens")
+	console.log("StakingRewards Contract TWO token balance: ", sRContractTWOBalance.div(oneTokenVal), " * 1e18 tokens")
 }
 
 // We recommend this pattern to be able to use async/await everywhere
