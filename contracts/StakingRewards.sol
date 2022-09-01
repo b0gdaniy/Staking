@@ -47,11 +47,10 @@ contract StakingRewards is Ownable, IStakingRewards {
     modifier updateReward(address _staker) {
         rewardPerTokenStored = rewardPerToken();
         updatedAt = _min(finishAt, block.timestamp);
-
-        User storage user = users[_staker];
+        
         if (_staker != address(0)) {
-            user.reward = earned(_staker);
-            user.rewardPerToken = rewardPerTokenStored;
+            users[_staker].reward = earned(_staker);
+            users[_staker].rewardPerToken = rewardPerTokenStored;
         }
         _;
     }
@@ -154,24 +153,22 @@ contract StakingRewards is Ownable, IStakingRewards {
      */
     function getRewards()
         public
-        gtZero(users[msg.sender].reward)
         updateReward(msg.sender)
     {
         uint256 reward = users[msg.sender].reward;
-
-        users[msg.sender].reward = 0;
-
-        selfFarmToken.transfer(msg.sender, reward);
+        if(reward > 0) {
+            users[msg.sender].reward = 0;
+            selfFarmToken.transfer(msg.sender, reward);
+        }
     }
 
     /**
      * @dev Calculate the number of tokens earned by the sender.
      */
     function earned(address _sender) public view returns (uint256) {
-        User memory user = users[_sender];
         return
-            ((user.balance * (rewardPerToken() - user.rewardPerToken)) / 1e18) +
-            user.reward;
+            ((users[_sender].balance * (rewardPerToken() - users[_sender].rewardPerToken)) / 1e18) +
+            users[_sender].reward;
     }
 
     /**
