@@ -29,7 +29,7 @@ contract StakingRewards is Ownable, IStakingRewards {
     uint256 public finishAt; // timestamp of when the rewards finish
     uint256 public updatedAt; // minimum of last updated time and reward finish time
 
-    uint256 public rewardRate = 1000; // how many reward given to user / second - 1000 by default
+    uint256 public rewardRate; // how many reward given to user / second
     uint256 public rewardPerTokenStored; // sum of (rewardRate * duration * 1e18 / total supply)
 
     uint256 public totalSupply; // total stacked tokens
@@ -196,6 +196,3 @@ contract StakingRewards is Ownable, IStakingRewards {
         return x <= y ? x : y;
     }
 }
-
-//1000000000000000000000
-// total supply - не актуален из за того что у нас 3 токена  не 2

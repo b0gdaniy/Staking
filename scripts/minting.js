@@ -6,11 +6,14 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 const ethers = hre.ethers;
-const Erc20Artifacts = require("../artifacts/contracts/ERC20.sol/ERC20Updated.json")
+const BigNumber = ethers.BigNumber;
+const Erc20Artifacts = require("../artifacts/contracts/ERC20Updated.sol/ERC20Updated.json")
 
 // let { selfFarm, tokenOne, tokenTwo, staking } = require("./deploy")
 
 async function main() {
+	const oneTokenVal = BigNumber.from("1000000000000000000");
+
 	// take owner of Staking contract and 3 accounts
 	const [owner, staker1, staker2, staker3] = await ethers.getSigners()
 
@@ -36,30 +39,30 @@ async function main() {
 	)
 
 	// minting 1000000 SFT tokens for staker1
-	await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", 1000000)
+	await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", oneTokenVal.mul(100000)) // 100000 tokens
 	const stakingContractBalance = await selfFarmContract.balanceOf("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9")
-	console.log("Staking Contract balance: ", stakingContractBalance)
+	console.log("Staking Contract balance: ", stakingContractBalance.div(oneTokenVal))
 
 	// minting 20000 SFT tokens for staker1
-	await selfFarmContract.mint(staker1.address, 20000)
+	await selfFarmContract.mint(staker1.address, oneTokenVal.mul(1000))
 	const staker1Balance = await selfFarmContract.balanceOf(staker1.address)
 	const increaseAllowanceByStaker1 = await selfFarmContract.connect(staker1).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker1Balance)
 	await increaseAllowanceByStaker1.wait()
-	console.log("Staker1 balance: ", staker1Balance)
+	console.log("Staker1 balance: ", staker1Balance.div(oneTokenVal))
 
 	// minting 20000 ONE tokens for staker2
-	await tokenOneContract.mint(staker2.address, 20000)
+	await tokenOneContract.mint(staker2.address, oneTokenVal.mul(1000))
 	const staker2Balance = await tokenOneContract.balanceOf(staker2.address)
 	const increaseAllowanceByStaker2 = await tokenOneContract.connect(staker2).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker2Balance)
 	await increaseAllowanceByStaker2.wait()
-	console.log("Staker2 balance: ", staker2Balance)
+	console.log("Staker2 balance: ", staker2Balance.div(oneTokenVal))
 
 	// minting 20000 TWO tokens for staker3
-	await tokenTwoContract.mint(staker3.address, 20000)
+	await tokenTwoContract.mint(staker3.address, oneTokenVal.mul(1000))
 	const staker3Balance = await tokenTwoContract.balanceOf(staker3.address)
 	const increaseAllowanceByStaker3 = await tokenTwoContract.connect(staker3).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker3Balance)
 	await increaseAllowanceByStaker3.wait()
-	console.log("Staker3 balance: ", staker3Balance)
+	console.log("Staker3 balance: ", staker3Balance.div(oneTokenVal))
 }
 
 // We recommend this pattern to be able to use async/await everywhere
