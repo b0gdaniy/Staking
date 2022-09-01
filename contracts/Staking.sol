@@ -90,7 +90,7 @@ contract StakingRewards is Ownable, IStakingRewards {
     uint256 public totalSupply; // total stacked tokens
 
     /// @dev Throws if amount sent less or equal to zero
-    modifier amountGTZero(uint256 _amount) {
+    modifier amountGtZero(uint256 _amount) {
         require(_amount > 0, "amount is <= 0");
         _;
     }
@@ -127,7 +127,7 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     function stake(address _tokenAddr, uint256 _amount)
         public
-        amountGTZero(_amount)
+        amountGtZero(_amount)
         updateReward(msg.sender)
     {
         require(_tokenAddr != address(0), "zero address");
@@ -150,7 +150,7 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     function withdraw(uint256 _amount)
         public
-        amountGTZero(_amount)
+        amountGtZero(_amount)
         updateReward(msg.sender)
     {
         User storage user = users[msg.sender];
@@ -165,7 +165,7 @@ contract StakingRewards is Ownable, IStakingRewards {
 
     function getRewards()
         public
-        amountGTZero(users[msg.sender].rewards)
+        amountGtZero(users[msg.sender].rewards)
         updateReward(msg.sender)
     {
         uint256 reward = users[msg.sender].rewards;
@@ -176,8 +176,8 @@ contract StakingRewards is Ownable, IStakingRewards {
     }
 
     function exitStaking() external updateReward(msg.sender) {
-        withdraw(users[msg.sender].balance);
         getRewards();
+        withdraw(users[msg.sender].balance);
     }
 
     /// @dev Calculate the number of tokens earned by the sender

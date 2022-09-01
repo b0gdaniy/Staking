@@ -41,19 +41,19 @@ async function main() {
 		owner
 	)
 
-	// stake for 3 stakers
-	const staker1Stake = await sRContract.connect(staker1).stake("0x5FbDB2315678afecb367f032d93F642f64180aa3", 15000, { gasLimit: 3e7 })
-	const staker1receipt = await staker1Stake.wait()
+	// rewards for 3 stakers
+	const staker1getRewards = await sRContract.connect(staker1).getRewards({ gasLimit: 3e7 })
+	const staker1receipt = await staker1getRewards.wait()
 	const staker1event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker1receipt.blockHash)
 	console.log("Staker1 Stake Event: ", staker1event)
 
-	const staker2Stake = await sRContract.connect(staker2).stake("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 15000, { gasLimit: 3e7 })
-	const staker2receipt = await staker2Stake.wait()
+	const staker2getRewards = await sRContract.connect(staker2).getRewards({ gasLimit: 3e7 })
+	const staker2receipt = await staker2getRewards.wait()
 	const staker2event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker2receipt.blockHash)
 	console.log("Staker2 Stake Event: ", staker2event)
 
-	const staker3Stake = await sRContract.connect(staker3).stake("0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", 15000, { gasLimit: 3e7 })
-	const staker3receipt = await staker3Stake.wait()
+	const staker3getRewards = await sRContract.connect(staker3).getRewards({ gasLimit: 3e7 })
+	const staker3receipt = await staker3getRewards.wait()
 	const staker3event = await sRContract.queryFilter(sRContract.filters.Deposit(), staker3receipt.blockHash)
 	console.log("Staker3 Stake Event: ", staker3event)
 

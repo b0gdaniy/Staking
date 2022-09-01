@@ -35,21 +35,31 @@ async function main() {
 		owner
 	)
 
+	// minting 1000000 SFT tokens for staker1
+	await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", 1000000)
+	const stakingContractBalance = await selfFarmContract.balanceOf("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9")
+	console.log("Staking Contract balance: ", stakingContractBalance)
+
 	// minting 20000 SFT tokens for staker1
 	await selfFarmContract.mint(staker1.address, 20000)
 	const staker1Balance = await selfFarmContract.balanceOf(staker1.address)
-	console.log(staker1Balance)
+	const increaseAllowanceByStaker1 = await selfFarmContract.connect(staker1).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker1Balance)
+	await increaseAllowanceByStaker1.wait()
+	console.log("Staker1 balance: ", staker1Balance)
 
 	// minting 20000 ONE tokens for staker2
 	await tokenOneContract.mint(staker2.address, 20000)
 	const staker2Balance = await tokenOneContract.balanceOf(staker2.address)
-	console.log(staker2Balance)
+	const increaseAllowanceByStaker2 = await tokenOneContract.connect(staker2).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker2Balance)
+	await increaseAllowanceByStaker2.wait()
+	console.log("Staker2 balance: ", staker2Balance)
 
 	// minting 20000 TWO tokens for staker3
 	await tokenTwoContract.mint(staker3.address, 20000)
 	const staker3Balance = await tokenTwoContract.balanceOf(staker3.address)
-	console.log(staker3Balance)
-
+	const increaseAllowanceByStaker3 = await tokenTwoContract.connect(staker3).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker3Balance)
+	await increaseAllowanceByStaker3.wait()
+	console.log("Staker3 balance: ", staker3Balance)
 }
 
 // We recommend this pattern to be able to use async/await everywhere
