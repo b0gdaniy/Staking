@@ -7,7 +7,7 @@
 const hre = require("hardhat");
 const ethers = hre.ethers;
 const Erc20Artifacts = require("../artifacts/contracts/ERC20.sol/ERC20Updated.json")
-const StakingArtifacts = require("../artifacts/contracts/Staking.sol/StakingRewards.json")
+const StakingArtifacts = require("../artifacts/contracts/StakingRewards.sol/StakingRewards.json")
 
 async function main() {
 	// take owner of Staking contract and 3 accounts

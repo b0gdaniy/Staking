@@ -25,7 +25,7 @@ async function main() {
   const staking = await Staking.deploy(erc20SelfFarm.address, erc20One.address, erc20Two.address)
   await staking.deployed()
 
-  console.log("Staking Rewards: ", staking.address)
+  console.log("Staking Rewards contract: ", staking.address)
 }
 
 async function deployErc20(deployer, tokenName, tokenSign) {
