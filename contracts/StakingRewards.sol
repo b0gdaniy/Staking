@@ -3,7 +3,7 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IStakingRewards.sol";
-import "./ERC20.sol";
+import "./ERC20Updated.sol";
 
 /**
  * @title Staking rewards contract
