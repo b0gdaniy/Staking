@@ -11,6 +11,9 @@ const Erc20Artifacts = require("../artifacts/contracts/ERC20Updated.sol/ERC20Upd
 const StakingArtifacts = require("../artifacts/contracts/StakingRewards.sol/StakingRewards.json")
 
 async function main() {
+	console.log("Staking script ran")
+	console.log("-----------------------------------------------------------------------------------")
+
 	const oneTokenVal = BigNumber.from("1000000000000000000");
 
 	// take owner of Staking contract and 3 accounts
@@ -66,13 +69,17 @@ async function main() {
 
 	// check balance of staking contract
 	const sRContractSFTBalance = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract SFT token balance: ", sRContractSFTBalance.div(oneTokenVal), " * 1e18 tokens")
+	console.log("StakingRewards SFT token: ", sRContractSFTBalance.div(oneTokenVal), " * 1e18 tokens")
 
 	const sRContractONEBalance = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract ONE token balance: ", sRContractONEBalance.div(oneTokenVal), " * 1e18 tokens")
+	console.log("StakingRewards ONE token: ", sRContractONEBalance.div(oneTokenVal), " * 1e18 tokens")
 
 	const sRContractTWOBalance = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("StakingRewards Contract TWO token balance: ", sRContractTWOBalance.div(oneTokenVal), " * 1e18 tokens")
+	console.log("StakingRewards TWO token: ", sRContractTWOBalance.div(oneTokenVal), " * 1e18 tokens")
+
+
+	console.log("-----------------------------------------------------------------------------------")
+	console.log("Staking script ended")
 }
 
 // We recommend this pattern to be able to use async/await everywhere

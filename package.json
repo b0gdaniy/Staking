@@ -2,9 +2,10 @@
   "name": "staking",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "deploy.js",
   "scripts": {
     "test": "npx hardhat run scripts/deploy.js --network localhost && npx hardhat run scripts/minting.js --network localhost && npx hardhat run scripts/staking.js --network localhost",
+    "withdraw": "npx hardhat run scripts/withdraw.js --network localhost",
     "reward": "npx hardhat run scripts/getRewards.js --network localhost"
   },
   "repository": {
@@ -12,7 +13,7 @@
     "url": "git+https://github.com/r0ugeEngine/Staking.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bohdan Pukhno",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/r0ugeEngine/Staking/issues"

@@ -10,6 +10,9 @@ const Erc20Artifacts = require("../artifacts/contracts/ERC20Updated.sol/ERC20Upd
 const StakingArtifacts = require("../artifacts/contracts/StakingRewards.sol/StakingRewards.json")
 
 async function main() {
+	console.log("Get Rewards script ran")
+	console.log("-----------------------------------------------------------------------------------")
+
 	// take owner of Staking contract and 3 accounts
 	const [owner, staker1, staker2, staker3] = await ethers.getSigners()
 
@@ -42,7 +45,7 @@ async function main() {
 	)
 
 	const stakingContractSFTBalanceBefore = await selfFarmContract.balanceOf(sRContract.address)
-	console.log(sRContract.address, " Address SFT token balance before: ", stakingContractSFTBalanceBefore, " tokens")
+	console.log("Staking Rewards {", sRContract.address, "} SFT token before: ", stakingContractSFTBalanceBefore)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -52,7 +55,7 @@ async function main() {
 
 	// check balance for {staker1}
 	const staker1SFTBalance = await selfFarmContract.balanceOf(staker1.address)
-	console.log(staker1.address, " Address SFT token balance: ", staker1SFTBalance, " tokens")
+	console.log("Staker1 {", staker1.address, "} SFT token: ", staker1SFTBalance)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -61,7 +64,7 @@ async function main() {
 
 	// check balance for {staker2}
 	const staker2SFTBalance = await selfFarmContract.balanceOf(staker2.address)
-	console.log(staker2.address, " Address SFT token balance: ", staker2SFTBalance, " tokens")
+	console.log("Staker2 {", staker2.address, "} SFT token: ", staker2SFTBalance)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -70,18 +73,21 @@ async function main() {
 
 	// check balance for {staker3}
 	const staker3SFTBalance = await selfFarmContract.balanceOf(staker3.address)
-	console.log(staker3.address, " Address SFT token balance: ", staker3SFTBalance, " tokens")
+	console.log("Staker3 {", staker3.address, "} SFT token: ", staker3SFTBalance)
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	const stakingContractSFTBalanceAfter = await selfFarmContract.balanceOf(sRContract.address)
-	console.log(sRContract.address, " Address SFT token balance after: ", stakingContractSFTBalanceAfter, " tokens")
+	console.log("Staking Rewards {", sRContract.address, " SFT token after: ", stakingContractSFTBalanceAfter)
 
 	// // const addressONEBalanceS = await tokenOneContract.balanceOf(sRContract.address)
 	// // console.log(sRContract.address, " Address ONE token balance: ", addressONEBalanceS)
 
 	// // const addressTWOBalanceS = await tokenTwoContract.balanceOf(sRContract.address)
 	// // console.log(sRContract.address, " Address TWO token balance: ", addressTWOBalanceS)
+
+	console.log("-----------------------------------------------------------------------------------")
+	console.log("Get Rewards script ended")
 }
 
 // We recommend this pattern to be able to use async/await everywhere

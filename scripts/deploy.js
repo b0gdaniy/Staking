@@ -8,6 +8,8 @@ const hre = require("hardhat");
 const ethers = hre.ethers;
 
 async function main() {
+  console.log("Deploy script ran")
+  console.log("-----------------------------------------------------------------------------------")
   // takes owner of Staking contract
   const [owner] = await ethers.getSigners()
 
@@ -26,6 +28,9 @@ async function main() {
   await staking.deployed()
 
   console.log("Staking Rewards contract: ", staking.address)
+
+  console.log("-----------------------------------------------------------------------------------")
+  console.log("Deploy script ended")
 }
 
 async function deployErc20(deployer, tokenName, tokenSign) {
