@@ -47,6 +47,14 @@ async function main() {
 		owner
 	)
 
+	// check {stakingContract} balance before withdraw
+	const stakingContractSFTBalanceBefore = await selfFarmContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", stakingContractSFTBalanceBefore)
+	const stakingContractONEBalanceBefore = await tokenOneContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} ONE before: ", stakingContractONEBalanceBefore)
+	const stakingContractTWOBalanceBefore = await tokenTwoContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} TWO before: ", stakingContractTWOBalanceBefore)
+
 	// sets the rewards amount
 	const setReward = await sRContract.setRewardAmount(oneTokenVal.mul(10000), { gasLimit: 3e7 })
 	await setReward.wait()
@@ -69,13 +77,11 @@ async function main() {
 
 	// check balance of staking contract
 	const sRContractSFTBalance = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("StakingRewards SFT token: ", sRContractSFTBalance.div(oneTokenVal), " * 1e18 tokens")
-
+	console.log("Staking Rewards {", sRContract.address, "} SFT: ", sRContractSFTBalance.div(oneTokenVal), " * 1e18")
 	const sRContractONEBalance = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("StakingRewards ONE token: ", sRContractONEBalance.div(oneTokenVal), " * 1e18 tokens")
-
+	console.log("Staking Rewards {", sRContract.address, "} ONE: ", sRContractONEBalance.div(oneTokenVal), " * 1e18")
 	const sRContractTWOBalance = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("StakingRewards TWO token: ", sRContractTWOBalance.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staking Rewards {", sRContract.address, "} TWO: ", sRContractTWOBalance.div(oneTokenVal), " * 1e18")
 
 
 	console.log("-----------------------------------------------------------------------------------")

@@ -49,12 +49,12 @@ async function main() {
 	)
 
 	// check {stakingContract} balance before withdraw
-	const stakingContractSFTBalanceBefore = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT balance before: ", stakingContractSFTBalanceBefore)
-	const stakingContractONEBalanceBefore = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} ONE balance before: ", stakingContractONEBalanceBefore)
-	const stakingContractTWOBalanceBefore = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} TWO balance before: ", stakingContractTWOBalanceBefore)
+	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
+	const sRContractOneBefore = await tokenOneContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} ONE before: ", sRContractOneBefore)
+	const sRContractTwoBefore = await tokenTwoContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} TWO before: ", sRContractTwoBefore)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -63,12 +63,12 @@ async function main() {
 	await staker1withdraw.wait()
 
 	// check balance of {staker1}
-	const staker1SFTBalance = await selfFarmContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} SFT balance: ", staker1SFTBalance)
-	const staker1ONEBalance = await tokenOneContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} ONE balance: ", staker1ONEBalance)
-	const staker1TWOBalance = await tokenTwoContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} TWO balance: ", staker1TWOBalance)
+	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
+	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
+	const staker1One = await tokenOneContract.balanceOf(staker1.address)
+	console.log("Staker1 {", staker1.address, "} ONE: ", staker1One)
+	const staker1Two = await tokenTwoContract.balanceOf(staker1.address)
+	console.log("Staker1 {", staker1.address, "} TWO: ", staker1Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -77,12 +77,12 @@ async function main() {
 	await staker2withdraw.wait()
 
 	// check balance of {staker2}
-	const staker2SFTBalance = await selfFarmContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} SFT balance: ", staker2SFTBalance)
-	const staker2ONEBalance = await tokenOneContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} ONE balance: ", staker2ONEBalance)
-	const staker2TWOBalance = await tokenTwoContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} TWO balance: ", staker2TWOBalance)
+	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
+	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
+	const staker2One = await tokenOneContract.balanceOf(staker2.address)
+	console.log("Staker2 {", staker2.address, "} ONE: ", staker2One)
+	const staker2Two = await tokenTwoContract.balanceOf(staker2.address)
+	console.log("Staker2 {", staker2.address, "} TWO: ", staker2Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -91,22 +91,22 @@ async function main() {
 	await staker3withdraw.wait()
 
 	// check balance of {staker3}
-	const staker3SFTBalance = await selfFarmContract.balanceOf(staker3.address)
-	console.log(staker3.address, " Address SFT token balance: ", staker3SFTBalance, " tokens")
-	const staker3ONEBalance = await tokenOneContract.balanceOf(staker3.address)
-	console.log(staker3.address, " Address ONE token balance: ", staker3ONEBalance, " tokens")
-	const staker3TWOBalance = await tokenTwoContract.balanceOf(staker3.address)
-	console.log(staker3.address, " Address TWO token balance: ", staker3TWOBalance, " tokens")
+	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
+	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
+	const staker3One = await tokenOneContract.balanceOf(staker3.address)
+	console.log("Staker3 {", staker3.address, "} ONE: ", staker3One)
+	const staker3Two = await tokenTwoContract.balanceOf(staker3.address)
+	console.log("Staker3 {", staker3.address, "} TWO: ", staker3Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	// check {stakingContract} balance after withdraw
-	const stakingContractSFTBalanceAfter = await selfFarmContract.balanceOf(sRContract.address)
-	console.log(sRContract.address, " Address SFT token balance after: ", stakingContractSFTBalanceAfter, " tokens")
-	const stakingContractONEBalanceAfter = await tokenOneContract.balanceOf(sRContract.address)
-	console.log(sRContract.address, " Address ONE token balance after: ", stakingContractONEBalanceAfter, " tokens")
-	const stakingContractTWOBalanceAfter = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log(sRContract.address, " Address TWO token balance after: ", stakingContractTWOBalanceAfter, " tokens")
+	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
+	const sRContractOneAfter = await tokenOneContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} ONE after: ", sRContractOneAfter)
+	const sRContractTwoAfter = await tokenTwoContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} TWO after: ", sRContractTwoAfter)
 
 	console.log("-----------------------------------------------------------------------------------")
 	console.log("Withdraw script ended")

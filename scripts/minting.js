@@ -41,31 +41,54 @@ async function main() {
 		owner
 	)
 
+	console.log("-----------------------------------------------------------------------------------")
+
 	// minting 100000 SFT tokens for Staking rewards contract
 	await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", oneTokenVal.mul(100000)) // 100000 tokens
 	const stakingContractBalance = await selfFarmContract.balanceOf("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9")
-	console.log("Staking Contract balance: ", stakingContractBalance.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staking Contract { 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9 } SFT: ", stakingContractBalance.div(oneTokenVal), " * 1e18 tokens")
+
+	console.log("-----------------------------------------------------------------------------------")
 
 	// minting 1000 SFT tokens for staker1
 	await selfFarmContract.mint(staker1.address, oneTokenVal.mul(1000))
-	const staker1Balance = await selfFarmContract.balanceOf(staker1.address)
-	const increaseAllowanceByStaker1 = await selfFarmContract.connect(staker1).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker1Balance)
+	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
+	const staker1One = await tokenOneContract.balanceOf(staker1.address)
+	const staker1Two = await tokenTwoContract.balanceOf(staker1.address)
+	const increaseAllowanceByStaker1 = await selfFarmContract.connect(staker1).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker1Sft)
 	await increaseAllowanceByStaker1.wait()
-	console.log("Staker1 SFT: ", staker1Balance.div(oneTokenVal), " * 1e18 tokens")
+	// check staker1 balance
+	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker1 {", staker1.address, "} SFT: ", staker1One.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Two.div(oneTokenVal), " * 1e18 tokens")
+
+	console.log("-----------------------------------------------------------------------------------")
 
 	// minting 1000 ONE tokens for staker2
 	await tokenOneContract.mint(staker2.address, oneTokenVal.mul(1000))
-	const staker2Balance = await tokenOneContract.balanceOf(staker2.address)
-	const increaseAllowanceByStaker2 = await tokenOneContract.connect(staker2).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker2Balance)
+	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
+	const staker2One = await tokenOneContract.balanceOf(staker2.address)
+	const staker2Two = await tokenTwoContract.balanceOf(staker2.address)
+	const increaseAllowanceByStaker2 = await tokenOneContract.connect(staker2).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker2One)
 	await increaseAllowanceByStaker2.wait()
-	console.log("Staker2 ONE: ", staker2Balance.div(oneTokenVal), " * 1e18 tokens")
+	// check staker2 balance
+	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker2 {", staker2.address, "} ONE: ", staker2One.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker2 {", staker2.address, "} TWO: ", staker2Two.div(oneTokenVal), " * 1e18 tokens")
+
+	console.log("-----------------------------------------------------------------------------------")
 
 	// minting 1000 TWO tokens for staker3
 	await tokenTwoContract.mint(staker3.address, oneTokenVal.mul(1000))
-	const staker3Balance = await tokenTwoContract.balanceOf(staker3.address)
-	const increaseAllowanceByStaker3 = await tokenTwoContract.connect(staker3).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker3Balance)
+	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
+	const staker3One = await tokenOneContract.balanceOf(staker3.address)
+	const staker3Two = await tokenTwoContract.balanceOf(staker3.address)
+	const increaseAllowanceByStaker3 = await tokenTwoContract.connect(staker3).increaseAllowance("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", staker3Two)
 	await increaseAllowanceByStaker3.wait()
-	console.log("Staker3 TWO: ", staker3Balance.div(oneTokenVal), " * 1e18 tokens")
+	// check staker3 balance
+	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker3 {", staker3.address, "} ONE: ", staker3One.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker3 {", staker3.address, "} TWO: ", staker3Two.div(oneTokenVal), " * 1e18 tokens")
 
 	console.log("-----------------------------------------------------------------------------------")
 	console.log("Minting script ended")

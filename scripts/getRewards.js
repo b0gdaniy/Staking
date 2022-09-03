@@ -44,8 +44,8 @@ async function main() {
 		owner
 	)
 
-	const stakingContractSFTBalanceBefore = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT token before: ", stakingContractSFTBalanceBefore)
+	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -54,8 +54,8 @@ async function main() {
 	const staker1receipt = await staker1getRewards.wait()
 
 	// check balance for {staker1}
-	const staker1SFTBalance = await selfFarmContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} SFT token: ", staker1SFTBalance)
+	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
+	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -63,8 +63,8 @@ async function main() {
 	const staker2receipt = await staker2getRewards.wait()
 
 	// check balance for {staker2}
-	const staker2SFTBalance = await selfFarmContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} SFT token: ", staker2SFTBalance)
+	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
+	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -72,19 +72,19 @@ async function main() {
 	const staker3receipt = await staker3getRewards.wait()
 
 	// check balance for {staker3}
-	const staker3SFTBalance = await selfFarmContract.balanceOf(staker3.address)
-	console.log("Staker3 {", staker3.address, "} SFT token: ", staker3SFTBalance)
+	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
+	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	const stakingContractSFTBalanceAfter = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, " SFT token after: ", stakingContractSFTBalanceAfter)
+	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
+	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
 
-	// // const addressONEBalanceS = await tokenOneContract.balanceOf(sRContract.address)
-	// // console.log(sRContract.address, " Address ONE token balance: ", addressONEBalanceS)
+	// // const addressOneS = await tokenOneContract.balanceOf(sRContract.address)
+	// // console.log(sRContract.address, " Address ONE token balance: ", addressOneS)
 
-	// // const addressTWOBalanceS = await tokenTwoContract.balanceOf(sRContract.address)
-	// // console.log(sRContract.address, " Address TWO token balance: ", addressTWOBalanceS)
+	// // const addressOneS = await tokenTwoContract.balanceOf(sRContract.address)
+	// // console.log(sRContract.address, " Address TWO token balance: ", addressOneS)
 
 	console.log("-----------------------------------------------------------------------------------")
 	console.log("Get Rewards script ended")
