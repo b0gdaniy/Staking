@@ -44,39 +44,47 @@ async function main() {
 		owner
 	)
 
+	// Checking the {stakingContract} balance before issuing a reward
+	// read the balance of SFT tokens on the Staking Rewards contract before staking
 	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	// rewards for 3 stakers
+	// Rewards for 3 stakers
+
+	// gets {staker1}'s rewards
+	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker1getRewards = await sRContract.connect(staker1).getRewards({ gasLimit: 3e7 })
 	const staker1receipt = await staker1getRewards.wait()
-
-	// check balance for {staker1}
+	// read {staker1}'s balance
 	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
 	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
+	// gets {staker2}'s rewards
+	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker2getRewards = await sRContract.connect(staker2).getRewards({ gasLimit: 3e7 })
 	const staker2receipt = await staker2getRewards.wait()
-
-	// check balance for {staker2}
+	// read {staker2}'s balance
 	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
 	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
+	// gets {staker3}'s rewards
+	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker3getRewards = await sRContract.connect(staker3).getRewards({ gasLimit: 3e7 })
 	const staker3receipt = await staker3getRewards.wait()
-
-	// check balance for {staker3}
+	// read {staker3}'s balance
 	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
 	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
 
 	console.log("-----------------------------------------------------------------------------------")
 
+	// Checking the {stakingContract} balance after issuing a reward
+	// read the balance of SFT tokens on the Staking Rewards contract after staking
 	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
 

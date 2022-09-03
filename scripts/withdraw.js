@@ -48,63 +48,78 @@ async function main() {
 		owner
 	)
 
-	// check {stakingContract} balance before withdraw
+	// Checking {stakingContract} balance before withdraw
+	// read the balance of SFT tokens on the {StakingRewards} contract before staking
 	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
+	// read the balance of ONE tokens on the {StakingRewards} contract before staking
 	const sRContractOneBefore = await tokenOneContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} ONE before: ", sRContractOneBefore)
+	// read the balance of TWO tokens on the {StakingRewards} contract before staking
 	const sRContractTwoBefore = await tokenTwoContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} TWO before: ", sRContractTwoBefore)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	// withdraw amount for staker1
+	// Withdraw 500 SFT tokens for {staker1}
 	const staker1withdraw = await sRContract.connect(staker1).withdraw(oneTokenVal.mul(500), { gasLimit: 3e7 })
 	await staker1withdraw.wait()
 
-	// check balance of {staker1}
+	// Check balance of {staker1}
+	// read the balance of SFT tokens on the {staker1}'s account
 	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
 	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
+	// read the balance of ONE tokens on the {staker1}'s account
 	const staker1One = await tokenOneContract.balanceOf(staker1.address)
 	console.log("Staker1 {", staker1.address, "} ONE: ", staker1One)
+	// read the balance of TWO tokens on the {staker1}'s account
 	const staker1Two = await tokenTwoContract.balanceOf(staker1.address)
 	console.log("Staker1 {", staker1.address, "} TWO: ", staker1Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	// withdraw amount for staker2
+	// Withdraw 500 SFT tokens for {staker2}
 	const staker2withdraw = await sRContract.connect(staker2).withdraw(oneTokenVal.mul(500), { gasLimit: 3e7 })
 	await staker2withdraw.wait()
 
-	// check balance of {staker2}
+	// Check balance of {staker2}
+	// read the balance of SFT tokens on the {staker2}'s account
 	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
 	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
+	// read the balance of ONE tokens on the {staker2}'s account
 	const staker2One = await tokenOneContract.balanceOf(staker2.address)
 	console.log("Staker2 {", staker2.address, "} ONE: ", staker2One)
+	// read the balance of TWO tokens on the {staker2}'s account
 	const staker2Two = await tokenTwoContract.balanceOf(staker2.address)
 	console.log("Staker2 {", staker2.address, "} TWO: ", staker2Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	// withdraw amount for staker3
+	// Withdraw 500 SFT tokens for {staker3}
 	const staker3withdraw = await sRContract.connect(staker3).withdraw(oneTokenVal.mul(500), { gasLimit: 3e7 })
 	await staker3withdraw.wait()
 
-	// check balance of {staker3}
+	// Check balance of {staker3}
+	// read the balance of SFT tokens on the {staker3}'s account
 	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
 	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
+	// read the balance of ONE tokens on the {staker3}'s account
 	const staker3One = await tokenOneContract.balanceOf(staker3.address)
 	console.log("Staker3 {", staker3.address, "} ONE: ", staker3One)
+	// read the balance of TWO tokens on the {staker3}'s account
 	const staker3Two = await tokenTwoContract.balanceOf(staker3.address)
 	console.log("Staker3 {", staker3.address, "} TWO: ", staker3Two)
 
 	console.log("-----------------------------------------------------------------------------------")
 
-	// check {stakingContract} balance after withdraw
+	// Check {stakingContract} balance after withdraw
+	// read the balance of SFT tokens on the {StakingRewards} contract after staking
 	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
+	// read the balance of ONE tokens on the {StakingRewards} contract after staking
 	const sRContractOneAfter = await tokenOneContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} ONE after: ", sRContractOneAfter)
+	// read the balance of TWO tokens on the {StakingRewards} contract after staking
 	const sRContractTwoAfter = await tokenTwoContract.balanceOf(sRContract.address)
 	console.log("Staking Rewards {", sRContract.address, "} TWO after: ", sRContractTwoAfter)
 

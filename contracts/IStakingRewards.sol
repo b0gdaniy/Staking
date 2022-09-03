@@ -2,7 +2,7 @@
 pragma solidity ^0.8.16;
 
 /**
- * @title Staking rewards interface
+ * @title Staking Rewards interface
  * @author Bohdan Pukhno
  * @dev Interface of the StakingRewards contract that have built on staking rewards algorithm.
  */

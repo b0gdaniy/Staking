@@ -6,7 +6,7 @@ import "./IStakingRewards.sol";
 import "./ERC20Updated.sol";
 
 /**
- * @title Staking rewards contract
+ * @title Staking Rewards contract
  * @author Bohdan Pukhno
  * @dev StakingRewards contract that have built on staking rewards algorithmrewardPerToken.
  * We have 3 tokens: one of them is a token that farms itself, 2 other tokens farm a token that farms itself.
@@ -47,7 +47,7 @@ contract StakingRewards is Ownable, IStakingRewards {
     modifier updateReward(address _staker) {
         rewardPerTokenStored = rewardPerToken();
         updatedAt = _min(finishAt, block.timestamp);
-        
+
         if (_staker != address(0)) {
             users[_staker].reward = earned(_staker);
             users[_staker].rewardPerToken = rewardPerTokenStored;
@@ -56,7 +56,7 @@ contract StakingRewards is Ownable, IStakingRewards {
     }
 
     /**
-     * @dev Initializes the contract setting the deployer as the initial owner.
+     * @dev Initializes the contract, setting the deployer as the initial owner.
      * Setting the token contracts addresses by the parameters passed to it.
      */
     constructor(
@@ -151,12 +151,9 @@ contract StakingRewards is Ownable, IStakingRewards {
     /**
      * @dev See {IStakingRewards-getRewards}.
      */
-    function getRewards()
-        public
-        updateReward(msg.sender)
-    {
+    function getRewards() public updateReward(msg.sender) {
         uint256 reward = users[msg.sender].reward;
-        if(reward > 0) {
+        if (reward > 0) {
             users[msg.sender].reward = 0;
             selfFarmToken.transfer(msg.sender, reward);
         }
@@ -167,7 +164,8 @@ contract StakingRewards is Ownable, IStakingRewards {
      */
     function earned(address _sender) public view returns (uint256) {
         return
-            ((users[_sender].balance * (rewardPerToken() - users[_sender].rewardPerToken)) / 1e18) +
+            ((users[_sender].balance *
+                (rewardPerToken() - users[_sender].rewardPerToken)) / 1e18) +
             users[_sender].reward;
     }
 
@@ -187,7 +185,7 @@ contract StakingRewards is Ownable, IStakingRewards {
     }
 
     /**
-     * @dev Calculate the minimum of `x` and `y`
+     * @dev Calculate the minimum of `x` and `y`.
      */
     function _min(uint256 x, uint256 y) private pure returns (uint256) {
         return x <= y ? x : y;
