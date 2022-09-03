@@ -59,8 +59,8 @@ async function main() {
 	await increaseAllowanceByStaker1.wait()
 	// check staker1 balance
 	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft.div(oneTokenVal), " * 1e18 tokens")
-	console.log("Staker1 {", staker1.address, "} SFT: ", staker1One.div(oneTokenVal), " * 1e18 tokens")
-	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Two.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker1 {", staker1.address, "} ONE: ", staker1One.div(oneTokenVal), " * 1e18 tokens")
+	console.log("Staker1 {", staker1.address, "} TWO: ", staker1Two.div(oneTokenVal), " * 1e18 tokens")
 
 	console.log("-----------------------------------------------------------------------------------")
 
