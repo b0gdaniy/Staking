@@ -4,7 +4,11 @@
   "description": "",
   "main": "deploy.js",
   "scripts": {
-    "test": "npx hardhat run scripts/deploy.js --network localhost && npx hardhat run scripts/minting.js --network localhost && npx hardhat run scripts/staking.js --network localhost",
+    "test": "npx hardhat run scripts/deploy.js --network localhost && npx hardhat run scripts/minting.js --network localhost && npx hardhat run scripts/staking.js --network localhost && npx hardhat run scripts/withdraw.js --network localhost && npx hardhat run scripts/getRewards.js --network localhost",
+    "enterStaking": "npx hardhat run scripts/deploy.js --network localhost && npx hardhat run scripts/minting.js --network localhost && npx hardhat run scripts/staking.js --network localhost",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "mint": "npx hardhat run scripts/minting.js --network localhost",
+    "stake": "npx hardhat run scripts/staking.js --network localhost",
     "withdraw": "npx hardhat run scripts/withdraw.js --network localhost",
     "reward": "npx hardhat run scripts/getRewards.js --network localhost"
   },
