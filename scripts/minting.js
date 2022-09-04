@@ -44,7 +44,8 @@ async function main() {
 	)
 
 	// Minting 100000 SFT tokens for {StakingRewards} contract
-	await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", oneTokenVal.mul(100000))
+	const sRContractMint = await selfFarmContract.mint("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", oneTokenVal.mul(100000))
+	await sRContractMint.wait()
 	// read the balance of SFT tokens on the {StakingRewards} contract
 	const stakingContractBalance = await selfFarmContract.balanceOf("0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9")
 	console.log("Staking Contract { 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9 } SFT: ", stakingContractBalance.div(oneTokenVal), " * 1e18 tokens")
@@ -52,7 +53,8 @@ async function main() {
 	console.log("-----------------------------------------------------------------------------------")
 
 	// Minting 1000 SFT tokens for {staker1}
-	await selfFarmContract.mint(staker1.address, oneTokenVal.mul(1000))
+	const staker1Mint = await selfFarmContract.mint(staker1.address, oneTokenVal.mul(1000))
+	await staker1Mint.wait()
 	// read the balance of SFT tokens on the {staker1}'s account
 	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
 	// read the balance of ONE tokens on the {staker1}'s account
@@ -70,7 +72,8 @@ async function main() {
 	console.log("-----------------------------------------------------------------------------------")
 
 	// Minting 1000 ONE tokens for {staker2}
-	await tokenOneContract.mint(staker2.address, oneTokenVal.mul(1000))
+	const staker2Mint = await tokenOneContract.mint(staker2.address, oneTokenVal.mul(1000))
+	await staker2Mint.wait()
 	// read the balance of SFT tokens on the {staker2}'s account
 	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
 	// read the balance of ONE tokens on the {staker2}'s account
@@ -88,7 +91,8 @@ async function main() {
 	console.log("-----------------------------------------------------------------------------------")
 
 	// Minting 1000 TWO tokens for {staker3}
-	await tokenTwoContract.mint(staker3.address, oneTokenVal.mul(1000))
+	const staker3Mint = await tokenTwoContract.mint(staker3.address, oneTokenVal.mul(1000))
+	await staker3Mint.wait()
 	// read the balance of SFT tokens on the {staker3}'s account
 	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
 	// read the balance of ONE tokens on the {staker3}'s account
