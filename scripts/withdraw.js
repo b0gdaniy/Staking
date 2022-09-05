@@ -13,7 +13,7 @@ const StakingArtifacts = require("../artifacts/contracts/StakingRewards.sol/Stak
 
 async function main() {
 	console.log("Withdraw script ran")
-	console.log("-----------------------------------------------------------------------------------")
+	console.log("----------------------------------------------------------------------------------------------------------")
 
 	const oneTokenVal = BigNumber.from("1000000000000000000");
 
@@ -50,14 +50,7 @@ async function main() {
 
 	// Checking {stakingContract} balance before withdraw
 	// read the balance of SFT tokens on the {StakingRewards} contract before staking
-	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
-	// read the balance of ONE tokens on the {StakingRewards} contract before staking
-	const sRContractOneBefore = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} ONE before: ", sRContractOneBefore)
-	// read the balance of TWO tokens on the {StakingRewards} contract before staking
-	const sRContractTwoBefore = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} TWO before: ", sRContractTwoBefore)
+	await getBalanceOf(sRContract.address, true, "before")
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -67,14 +60,7 @@ async function main() {
 
 	// Check balance of {staker1}
 	// read the balance of SFT tokens on the {staker1}'s account
-	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
-	// read the balance of ONE tokens on the {staker1}'s account
-	const staker1One = await tokenOneContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} ONE: ", staker1One)
-	// read the balance of TWO tokens on the {staker1}'s account
-	const staker1Two = await tokenTwoContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} TWO: ", staker1Two)
+	await getBalanceOf(staker1.address, false, "")
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -84,14 +70,7 @@ async function main() {
 
 	// Check balance of {staker2}
 	// read the balance of SFT tokens on the {staker2}'s account
-	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
-	// read the balance of ONE tokens on the {staker2}'s account
-	const staker2One = await tokenOneContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} ONE: ", staker2One)
-	// read the balance of TWO tokens on the {staker2}'s account
-	const staker2Two = await tokenTwoContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} TWO: ", staker2Two)
+	await getBalanceOf(staker2.address, false, "")
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -101,30 +80,33 @@ async function main() {
 
 	// Check balance of {staker3}
 	// read the balance of SFT tokens on the {staker3}'s account
-	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
-	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
-	// read the balance of ONE tokens on the {staker3}'s account
-	const staker3One = await tokenOneContract.balanceOf(staker3.address)
-	console.log("Staker3 {", staker3.address, "} ONE: ", staker3One)
-	// read the balance of TWO tokens on the {staker3}'s account
-	const staker3Two = await tokenTwoContract.balanceOf(staker3.address)
-	console.log("Staker3 {", staker3.address, "} TWO: ", staker3Two)
+	await getBalanceOf(staker3.address, false, "")
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	// Check {stakingContract} balance after withdraw
 	// read the balance of SFT tokens on the {StakingRewards} contract after staking
-	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
-	// read the balance of ONE tokens on the {StakingRewards} contract after staking
-	const sRContractOneAfter = await tokenOneContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} ONE after: ", sRContractOneAfter)
-	// read the balance of TWO tokens on the {StakingRewards} contract after staking
-	const sRContractTwoAfter = await tokenTwoContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} TWO after: ", sRContractTwoAfter)
+	await getBalanceOf(sRContract.address, true, "after")
 
-	console.log("-----------------------------------------------------------------------------------")
+	console.log("----------------------------------------------------------------------------------------------------------")
 	console.log("Withdraw script ended")
+
+	async function getBalanceOf(address, isContract, when) {
+		let stakerOrContract = "Staker "
+		if (isContract) {
+			stakerOrContract = "SR Contract"
+		}
+
+		// read the balance of SFT tokens on the {address} after staking
+		const addressSftBalance = await selfFarmContract.balanceOf(address)
+		console.log(stakerOrContract, " {", address, "} SFT ", when, ": ", addressSftBalance.div(oneTokenVal), " * 1e18 tokens")
+		// read the balance of ONE tokens on the {address} staking
+		const addressOneBalance = await tokenOneContract.balanceOf(address)
+		console.log(stakerOrContract, " {", address, "} ONE ", when, ": ", addressOneBalance.div(oneTokenVal), " * 1e18 tokens")
+		// read the balance of TWO tokens on the {address} staking
+		const addressTwoBalance = await tokenTwoContract.balanceOf(address)
+		console.log(stakerOrContract, " {", address, "} TWO ", when, ": ", addressTwoBalance.div(oneTokenVal), " * 1e18 tokens")
+	}
 }
 
 // We recommend this pattern to be able to use async/await everywhere

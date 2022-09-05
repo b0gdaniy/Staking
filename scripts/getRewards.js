@@ -6,12 +6,16 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 const ethers = hre.ethers;
+const BigNumber = ethers.BigNumber;
+
 const Erc20Artifacts = require("../artifacts/contracts/ERC20Updated.sol/ERC20Updated.json")
 const StakingArtifacts = require("../artifacts/contracts/StakingRewards.sol/StakingRewards.json")
 
 async function main() {
 	console.log("Get Rewards script ran")
-	console.log("-----------------------------------------------------------------------------------")
+	console.log("----------------------------------------------------------------------------------------------------------")
+
+	const oneTokenVal = BigNumber.from("1000000000000000000");
 
 	// take owner of Staking contract and 3 accounts
 	const [owner, staker1, staker2, staker3] = await ethers.getSigners()
@@ -46,8 +50,7 @@ async function main() {
 
 	// Checking the {stakingContract} balance before issuing a reward
 	// read the balance of SFT tokens on the Staking Rewards contract before staking
-	const sRContractSftBefore = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT before: ", sRContractSftBefore)
+	await _balanceOf(sRContract.address, true, "before")
 
 	console.log("-----------------------------------------------------------------------------------")
 
@@ -56,46 +59,46 @@ async function main() {
 	// gets {staker1}'s rewards
 	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker1getRewards = await sRContract.connect(staker1).getRewards({ gasLimit: 3e7 })
-	const staker1receipt = await staker1getRewards.wait()
+	await staker1getRewards.wait()
 	// read {staker1}'s balance
-	const staker1Sft = await selfFarmContract.balanceOf(staker1.address)
-	console.log("Staker1 {", staker1.address, "} SFT: ", staker1Sft)
+	await _balanceOf(staker1.address, false, "after getting rewards")
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	// gets {staker2}'s rewards
 	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker2getRewards = await sRContract.connect(staker2).getRewards({ gasLimit: 3e7 })
-	const staker2receipt = await staker2getRewards.wait()
+	await staker2getRewards.wait()
 	// read {staker2}'s balance
-	const staker2Sft = await selfFarmContract.balanceOf(staker2.address)
-	console.log("Staker2 {", staker2.address, "} SFT: ", staker2Sft)
+	await _balanceOf(staker2.address, false, "after getting rewards")
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	// gets {staker3}'s rewards
 	// { gasLimit: 3e7 } needs for avoid gal limit error
 	const staker3getRewards = await sRContract.connect(staker3).getRewards({ gasLimit: 3e7 })
-	const staker3receipt = await staker3getRewards.wait()
+	await staker3getRewards.wait()
 	// read {staker3}'s balance
-	const staker3Sft = await selfFarmContract.balanceOf(staker3.address)
-	console.log("Staker3 {", staker3.address, "} SFT: ", staker3Sft)
+	await _balanceOf(staker3.address, false, "after getting rewards")
 
 	console.log("-----------------------------------------------------------------------------------")
 
 	// Checking the {stakingContract} balance after issuing a reward
 	// read the balance of SFT tokens on the Staking Rewards contract after staking
-	const sRContractSftAfter = await selfFarmContract.balanceOf(sRContract.address)
-	console.log("Staking Rewards {", sRContract.address, "} SFT after: ", sRContractSftAfter)
+	await _balanceOf(sRContract.address, true, "after")
 
-	// // const addressOneS = await tokenOneContract.balanceOf(sRContract.address)
-	// // console.log(sRContract.address, " Address ONE token balance: ", addressOneS)
-
-	// // const addressOneS = await tokenTwoContract.balanceOf(sRContract.address)
-	// // console.log(sRContract.address, " Address TWO token balance: ", addressOneS)
-
-	console.log("-----------------------------------------------------------------------------------")
+	console.log("----------------------------------------------------------------------------------------------------------")
 	console.log("Get Rewards script ended")
+
+	async function _balanceOf(address, isContract, when) {
+		let stakerOrContract = "Staker"
+		if (isContract) {
+			stakerOrContract = "SR Contract"
+		}
+
+		const sftBalance = await selfFarmContract.balanceOf(address)
+		console.log(stakerOrContract, " {", address, "} SFT ", when, ": ", sftBalance, " tokens")
+	}
 }
 
 // We recommend this pattern to be able to use async/await everywhere
