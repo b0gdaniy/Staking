@@ -7,21 +7,6 @@ pragma solidity ^0.8.16;
  * @dev Interface of the StakingRewards contract that have built on staking rewards algorithm.
  */
 interface IStakingRewards {
-    /// @dev Emitted when the user submits some amount of tokens to Staking.
-    event Deposit(
-        address indexed sender,
-        address indexed tokenAddr,
-        uint256 amount
-    );
-    /// @dev Emitted when the user withdraws some amount of tokens from Staking.
-    event Withdraw(
-        address indexed to,
-        address indexed tokenAddr,
-        uint256 amount
-    );
-    /// @dev Emitted when the user withdraws some amount of rewards from Staking.
-    event RewardSent(address indexed to, uint256 amount);
-
     /**
      * @dev Updates the sum of (rewardRate * duration * 1e18 / total supply)
      * and minimum of last updated time and reward finish time after function call.

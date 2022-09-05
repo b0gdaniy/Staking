@@ -12,6 +12,21 @@ import "./ERC20Updated.sol";
  * We have 3 tokens: one of them is a token that farms itself, 2 other tokens farm a token that farms itself.
  */
 contract StakingRewards is Ownable, IStakingRewards {
+    /// @dev Emitted when the user submits some amount of tokens to Staking.
+    event Deposit(
+        address indexed sender,
+        address indexed tokenAddr,
+        uint256 amount
+    );
+    /// @dev Emitted when the user withdraws some amount of tokens from Staking.
+    event Withdraw(
+        address indexed to,
+        address indexed tokenAddr,
+        uint256 amount
+    );
+    /// @dev Emitted when the user withdraws some amount of rewards from Staking.
+    event RewardSent(address indexed to, uint256 amount);
+
     ERC20Updated immutable tokenOne; // token that farms {selfFarmToken}
     ERC20Updated immutable tokenTwo; // token that farms {selfFarmToken}
     ERC20Updated immutable selfFarmToken; // token that farms itself
@@ -20,7 +35,7 @@ contract StakingRewards is Ownable, IStakingRewards {
         uint256 balance; // balance of user
         uint256 reward; // reward the user earns
         uint256 rewardPerToken; // reward per token
-        address token; // user's token
+        ERC20Updated token; // user's token
     }
 
     mapping(address => User) public users;
@@ -116,18 +131,14 @@ contract StakingRewards is Ownable, IStakingRewards {
 
         User storage user = users[msg.sender];
 
-        user.token = _tokenAddr;
+        user.token = ERC20Updated(_tokenAddr);
+
+        user.token.transferFrom(msg.sender, address(this), _amount);
 
         user.balance += _amount;
         totalSupply += _amount;
 
-        ERC20Updated(user.token).transferFrom(
-            msg.sender,
-            address(this),
-            _amount
-        );
-
-        emit Deposit(msg.sender, user.token, _amount);
+        emit Deposit(msg.sender, address(user.token), _amount);
     }
 
     /**
@@ -140,12 +151,12 @@ contract StakingRewards is Ownable, IStakingRewards {
     {
         User storage user = users[msg.sender];
 
+        user.token.transfer(msg.sender, _amount);
+
         user.balance -= _amount;
         totalSupply -= _amount;
 
-        ERC20Updated(user.token).transfer(msg.sender, _amount);
-
-        emit Withdraw(msg.sender, user.token, _amount);
+        emit Withdraw(msg.sender, address(user.token), _amount);
     }
 
     /**

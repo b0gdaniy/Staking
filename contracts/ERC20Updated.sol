@@ -25,7 +25,7 @@ contract ERC20Updated is ERC20, Ownable {
      * REQUIREMENTS:
      * - `msg.sender` must be owner
      */
-    function mint(address account, uint256 amount) public virtual onlyOwner {
+    function mint(address account, uint256 amount) external virtual onlyOwner {
         _mint(account, amount);
     }
 
@@ -35,7 +35,7 @@ contract ERC20Updated is ERC20, Ownable {
      * REQUIREMENTS:
      * - `msg.sender` must be owner
      */
-    function burn(address account, uint256 amount) public virtual onlyOwner {
+    function burn(address account, uint256 amount) external virtual onlyOwner {
         _burn(account, amount);
     }
 }
