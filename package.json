@@ -10,7 +10,7 @@
     "mint": "npx hardhat run scripts/minting.js --network localhost",
     "stake": "npx hardhat run scripts/staking.js --network localhost",
     "withdraw": "npx hardhat run scripts/withdraw.js --network localhost",
-    "reward": "npx hardhat run scripts/getRewards.js --network localhost"
+    "rewards": "npx hardhat run scripts/getRewards.js --network localhost"
   },
   "repository": {
     "type": "git",
