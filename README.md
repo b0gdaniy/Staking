@@ -28,6 +28,6 @@ npx hardhat run scripts/withdraw.js --network localhost
 1) to deploy contract: `npm run deploy`
 2) to mint some tokens: `npm run mint`
 3) to enter staking: `npm run stake`
-4) to get rewards: `npm run reward`
+4) to get rewards: `npm run rewards`
 5) to get your staked tokens: `npm run withdraw`
 - or use one command to run these commands sequentially in hardhat localhost network: `npm test`
