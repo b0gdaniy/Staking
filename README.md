@@ -1,8 +1,9 @@
-# Staking Rewards contract
+<h1 align="center">🪙Staking Rewards contract🪙</h1>
+<p align='center'>
+    <img src='https://nft-arty.com/wp-content/uploads/2022/04/what-is-staking-800x533-1.png' alt='screenshot' width="600" height="400" />
+</p>
 
-
-
-## How to use Hardhat in this Project
+<h2 align="center">👷‍♂️How to use Hardhat in this Project👷‍♂️</h2>
 
 Try running some of the following tasks:
 
